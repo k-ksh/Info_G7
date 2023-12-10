@@ -70,6 +70,8 @@
     <Compile Include="Pages\GlobalSqaDragAndDropPage.cs" />
     <Compile Include="Pages\GlobalSqaMainPage.cs" />
     <Compile Include="Pages\GlobalSqaProgressBarPage.cs" />
+    <Compile Include="Pages\GlobalSqaDatePickerPage.cs" />
+    <Compile Include="Pages\GlobalSqaSamplePageTestResult.cs" />
     <Compile Include="Pages\GlodalSqaBasePage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\SeleniumTests.cs" />

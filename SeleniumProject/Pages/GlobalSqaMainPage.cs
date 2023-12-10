@@ -13,6 +13,7 @@ namespace SeleniumProject.Pages
         public IWebElement TestersHubMainMenuElement => driver.FindElement(By.Id("menu-item-2822"));
         public IWebElement DemoTestersSiteSubMenuElement => driver.FindElement(By.Id("menu-item-2823"));
         public IWebElement DragAndDropSubSubMenuElement => driver.FindElement(By.Id("menu-item-2829"));
+        public IWebElement DatePickerSubSubMenuElement => driver.FindElement(By.Id("menu-item-2827"));
         public IWebElement ProgressBarSubSubMenuElement => driver.FindElement(By.Id("menu-item-2832"));
 
         public ComponentForPage1 ComponentForPage1 => new ComponentForPage1(driver);

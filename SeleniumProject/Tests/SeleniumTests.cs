@@ -6,6 +6,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumProject.Pages;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 
 namespace SeleniumProject.Tests
@@ -32,7 +33,78 @@ namespace SeleniumProject.Tests
             driver.Quit();
         }
 
-        [Test]
+
+        //[Test]
+        public void HW17()
+        {
+            // Arrange
+            driver.Url = "https://www.globalsqa.com/samplepagetest/";
+
+          
+            IWebElement fileInput = driver.FindElement(By.XPath("//input[@name='file-553']"));
+
+            fileInput.SendKeys("C:\\Users\\katia.shvachko\\Desktop\\test17.txt");
+
+            
+          
+            IWebElement nameInput = driver.FindElement(By.XPath("//input[@name='g2599-name']"));
+            nameInput.SendKeys("katia");
+
+            
+            IWebElement emailInput = driver.FindElement(By.XPath("//input[@name='g2599-email']"));
+            emailInput.SendKeys("katya.shvacko@gmail.com");
+
+       
+            IWebElement experienceDropdown = driver.FindElement(By.XPath("//select[@name='g2599-experienceinyears']"));
+            SelectElement experienceSelect = new SelectElement(experienceDropdown);
+            experienceSelect.SelectByText("3-5");
+
+            var functionalTestingCheckbox = driver.FindElement(By.CssSelector("[value='Functional Testing']"));
+            var postGraduateRadiobutton = driver.FindElement(By.CssSelector("[value='Post Graduate']"));
+            var submitButton = driver.FindElement(By.XPath("//button[@class='pushbutton-wide']"));
+            var contactInfo = driver.FindElement(By.XPath("//h3[text()='Contact Info']"));
+
+            var yCords = postGraduateRadiobutton.Location.Y;
+            var windowHeight = driver.Manage().Window.Size.Height;
+
+            Actions actions = new Actions(driver);
+
+            
+            actions.ScrollToElement(submitButton).Perform();
+
+            functionalTestingCheckbox.Click();
+            postGraduateRadiobutton.Click();
+
+            actions.ScrollToElement(contactInfo).Perform();
+            IWebElement commentInput = driver.FindElement(By.XPath("//textarea[@name='g2599-comment']"));
+            commentInput.SendKeys("hw17");
+
+            submitButton.Click();
+
+
+            // Arrange
+            
+            IWebElement blockquote = driver.FindElement(By.XPath("//blockquote[@class='contact-form-submission']"));
+      
+            ReadOnlyCollection<IWebElement> paragraphs = blockquote.FindElements(By.XPath("./p"));
+
+
+            Assert.Multiple(() =>
+            {
+                Assert.IsTrue(paragraphs.Any(p => p.Text.Contains("Name: katia")), "Name 'katia' not found in the blockquote.");
+                Assert.IsTrue(paragraphs.Any(p => p.Text.Contains("Email: katya.shvacko@gmail.com")), "Email information not found in the blockquote.");
+                Assert.IsTrue(paragraphs.Any(p => p.Text.Contains("Experience (In Years): 3-5")), "Experience information not found in the blockquote.");
+                Assert.IsTrue(paragraphs.Any(p => p.Text.Contains("Expertise :: Functional Testing")), "expertise information not found in the blockquote.");
+                Assert.IsTrue(paragraphs.Any(p => p.Text.Contains("Education: Post Graduate")), " Education information not found in the blockquote.");
+                Assert.IsTrue(paragraphs.Any(p => p.Text.Contains("Comment: hw17")), " comment information not found in the blockquote.");
+           
+
+            });
+
+        }
+
+
+        //[Test]
         public void VerifyPercantageOnGlobalSqaMain()
         {
             // Arrange
@@ -66,7 +138,7 @@ namespace SeleniumProject.Tests
             //});
         }
 
-        [Test]
+        //[Test]
         public void TestScrollToElement()
         {
             driver.Url = "https://www.globalsqa.com/samplepagetest/";
@@ -274,6 +346,51 @@ namespace SeleniumProject.Tests
                     $"Expected number is '{expectedPicturesInTrashNumber}'.");
             });
         }
+
+        [Test]
+        public void VerifyDatePickerWithPageObject()
+        {
+            // Arrange
+            driver.Url = "https://www.globalsqa.com/";
+
+            // Act
+            var globalSqaMainPage = new GlobalSqaMainPage(driver);
+
+            // Navigate to Date Picker page
+            var actions = new Actions(driver);
+            actions
+                .MoveToElement(globalSqaMainPage.TestersHubMainMenuElement)
+                .MoveToElement(globalSqaMainPage.DemoTestersSiteSubMenuElement)
+                .Click(globalSqaMainPage.DatePickerSubSubMenuElement)
+                .Perform();
+
+            // Another option
+            //var globalSqaDragAndDropPage1 = globalSqaMainPage.GoToDragAndDropPage1();
+
+            var globalSqaDatePickerPage = new GlobalSqaDatePickerPage(driver);
+            driver.SwitchTo().Frame(globalSqaDatePickerPage.DatePickerIframe);
+
+            actions
+                .Click(globalSqaDatePickerPage.DatePickerElement)
+                .Perform();
+
+            // Choose the current day of the next month
+            globalSqaDatePickerPage.ChooseNextMonthDate();
+
+            // Get the selected date for verification
+            var selectedDate = globalSqaDatePickerPage.GetSelectedDate();
+            // Get the current date plus one month in the "MM/dd/yyyy" format
+            var expectedDate = DateTime.Now.AddMonths(1).ToString("MM/dd/yyyy");
+
+            expectedDate = expectedDate.Replace(".", "/");
+
+            // Assert
+            Assert.AreEqual(expectedDate, selectedDate, $"Selected date is not as expected. Expected: {expectedDate}, Actual: {selectedDate}");
+
+
+        }
+
+
 
         //[Test]
         public void WorkWithComponents()
